@@ -1,0 +1,27 @@
+event_id,image_id,timestamp,event_type,score,severity,explanation,action_hint
+evt_c04e39d2e4,img_2d74745232,2026-06-09T07:36:26,IMAGE_PROCESSED,233.55,NORMAL,"Image was received, saved, preprocessed, and registered as visual data.",Continue monitoring or pass the image to Lab 7 object detection.
+evt_b10eaf016d,img_e35d0bf94d,2026-06-09T07:36:26,IMAGE_PROCESSED,233.55,NORMAL,"Image was received, saved, preprocessed, and registered as visual data.",Continue monitoring or pass the image to Lab 7 object detection.
+evt_7eb5db1e9e,vid_57a5cb6ca5,2026-06-09T07:36:28,VIDEO_RECORDED,10,NORMAL,Recorded a short video clip with 10 frames.,Use the video clip for later review or image analysis.
+evt_e566869fba,img_494650f8dd,2026-06-09T07:36:29,IMAGE_PROCESSED,233.55,NORMAL,"Image was received, saved, preprocessed, and registered as visual data.",Continue monitoring or pass the image to Lab 7 object detection.
+evt_68a81b101c,img_494650f8dd,2026-06-09T07:36:29,MOTION_DETECTED,1162.0,WARNING,Frame difference exceeded threshold.,Review captured image and keep the event in the dashboard.
+evt_11a45c9521,img_5a2608ac93,2026-06-10T08:07:15,PERSON_MOVING_DETECTED,71183.5,HIGH,Phát hiện chuyển động và phát hiện 1 người trong frame.,Tạo cảnh báo: có người đang di chuyển trong vùng camera.
+evt_024cb7e4db,img_2a9bb9c3a5,2026-06-10T08:07:16,PERSON_MOVING_DETECTED,71183.5,HIGH,Phát hiện chuyển động và phát hiện 1 người trong frame.,Tạo cảnh báo: có người đang di chuyển trong vùng camera.
+evt_72a077b831,img_98e366dda1,2026-06-10T08:07:22,NO_PERSON_DETECTED,0,NORMAL,Không phát hiện người trong frame hiện tại.,Tiếp tục giám sát hoặc điều chỉnh góc camera/ánh sáng.
+evt_47e5089e95,img_1f26a1fc44,2026-06-10T08:07:35,NO_PERSON_DETECTED,0,NORMAL,Không phát hiện người trong frame hiện tại.,Tiếp tục giám sát hoặc điều chỉnh góc camera/ánh sáng.
+evt_ee19548ce7,img_803879ff6a,2026-06-10T08:08:32,NON_PERSON_MOTION,74093.5,LOW,"Có chuyển động, nhưng không phát hiện người trong frame.",Chỉ ghi log; không tạo cảnh báo người di chuyển.
+evt_89d6beba18,img_eda34b60aa,2026-06-10T08:12:52,NO_PERSON_DETECTED,0,NORMAL,Không phát hiện người trong frame hiện tại.,Tiếp tục giám sát hoặc điều chỉnh góc camera/ánh sáng.
+evt_b38872a309,img_2b909ad116,2026-06-10T08:13:00,NON_PERSON_MOTION,5497.5,LOW,"Có chuyển động, nhưng không phát hiện người trong frame.",Chỉ ghi log; không tạo cảnh báo người di chuyển.
+evt_dbff1f5137,vid_9e759e53fc,2026-06-10T08:13:01,VIDEO_RECORDED,39,NORMAL,Đã ghi một video ngắn gồm 39 frame.,Dùng video để xem lại hoặc phân tích hình ảnh sau này.
+evt_856d766cb3,img_710e04c062,2026-06-10T08:13:11,NON_PERSON_MOTION,5586.5,LOW,"Có chuyển động, nhưng không phát hiện người trong frame.",Chỉ ghi log; không tạo cảnh báo người di chuyển.
+evt_111b75507f,img_f9f3c05c04,2026-06-10T08:13:21,NO_SIGNIFICANT_MOTION,281.5,NORMAL,Không phát hiện thay đổi đáng kể giữa các frame.,Tiếp tục giám sát camera.
+evt_679015fd10,img_7698c4a12a,2026-06-10T08:17:08,NO_PERSON_DETECTED,0,NORMAL,Không phát hiện người trong frame hiện tại.,Tiếp tục giám sát hoặc điều chỉnh góc camera/ánh sáng.
+evt_ab53ed5c1f,img_519dbe8b44,2026-06-10T08:18:34,IMAGE_PROCESSED,133.46,NORMAL,"Ảnh đã được nhận, lưu, xử lý và đăng ký như dữ liệu thị giác.",Tiếp tục giám sát hoặc đưa ảnh sang Lab 7 để nhận diện vật thể.
+evt_36c73b47ca,img_9a1d55e05a,2026-06-10T08:18:41,NON_PERSON_MOTION,6979.0,LOW,"Có chuyển động, nhưng không phát hiện người trong frame.",Chỉ ghi log; không tạo cảnh báo người di chuyển.
+evt_563bbdc813,img_16b8eb59e8,2026-06-10T08:19:10,NO_PERSON_DETECTED,0,NORMAL,Không phát hiện người trong frame hiện tại.,Tiếp tục giám sát hoặc điều chỉnh góc camera/ánh sáng.
+evt_65108c0948,img_e8c84ca187,2026-06-10T08:19:12,NO_PERSON_DETECTED,0,NORMAL,Không phát hiện người trong frame hiện tại.,Tiếp tục giám sát hoặc điều chỉnh góc camera/ánh sáng.
+evt_4eb15c6c86,img_528abd9014,2026-06-10T08:19:19,NON_PERSON_MOTION,55442.5,LOW,"Có chuyển động, nhưng không phát hiện người trong frame.",Chỉ ghi log; không tạo cảnh báo người di chuyển.
+evt_4bd5db20fd,img_10f8a2c14e,2026-06-10T08:19:29,NON_PERSON_MOTION,11670.5,LOW,"Có chuyển động, nhưng không phát hiện người trong frame.",Chỉ ghi log; không tạo cảnh báo người di chuyển.
+evt_fc56f619ff,img_2cdad3e687,2026-06-10T08:19:39,PERSON_MOVING_DETECTED,35406.5,HIGH,Phát hiện chuyển động và phát hiện 1 người trong frame.,Tạo cảnh báo: có người đang di chuyển trong vùng camera.
+evt_0542378df9,img_c002b29aba,2026-06-10T08:52:05,NO_FACE_DETECTED,0,NORMAL,Không phát hiện khuôn mặt trong frame.,"Đưa mặt rõ vào camera, tăng ánh sáng hoặc giảm face_min_size."
+evt_6ebaa9376a,img_787913af04,2026-06-10T08:53:03,FACE_MOVEMENT_DETECTED,61732.2,HIGH,Phát hiện khuôn mặt có chuyển động/quay đầu. Hướng ước lượng: RIGHT.,Tạo visual event: khuôn mặt đang chuyển động trong camera.
+evt_31215fb743,img_99a03ab014,2026-06-10T09:25:01,NO_FACE_DETECTED,0.0,NORMAL,Không phát hiện khuôn mặt trong thời gian kiểm tra.,"Đưa mặt vào khung hình, tăng ánh sáng hoặc giảm face_min_size."

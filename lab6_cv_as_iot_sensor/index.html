@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lab 6 - OpenCV Person Moving Detection</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+    }
+
+    header {
+      background: linear-gradient(90deg, #0b3f75, #0b5cad);
+      color: white;
+      padding: 20px 28px;
+    }
+
+    header h1 {
+      margin: 0 0 6px 0;
+      font-size: 26px;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    main {
+      max-width: 1280px;
+      margin: 18px auto;
+      padding: 0 16px 36px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #d8dee8;
+      border-radius: 14px;
+      padding: 16px;
+      margin: 14px 0;
+      box-shadow: 0 2px 8px rgba(20, 40, 80, 0.05);
+    }
+
+    .grid-main {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 14px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .grid-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 1000px) {
+      .grid-main,
+      .grid-2,
+      .grid-5 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 13px;
+      margin: 4px;
+      color: white;
+      background: #0b5cad;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.92;
+    }
+
+    button.motion {
+      background: #b45309;
+    }
+
+    button.stop {
+      background: #6b7280;
+    }
+
+    button.danger {
+      background: #dc2626;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      border: 1px solid #b8c4d6;
+      border-radius: 8px;
+      width: min(100%, 420px);
+      font-size: 15px;
+    }
+
+    img {
+      max-width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #eef2f7;
+    }
+
+    #stream {
+      width: 100%;
+      min-height: 420px;
+      object-fit: contain;
+    }
+
+    pre {
+      background: #0b1220;
+      color: #e5e7eb;
+      border-radius: 10px;
+      padding: 12px;
+      overflow: auto;
+      max-height: 460px;
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eef4fb;
+      color: #0b3f75;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #4b5563;
+    }
+
+    .status {
+      font-weight: 800;
+      color: #16a34a;
+    }
+
+    .status.off {
+      color: #dc2626;
+    }
+
+    .metric {
+      font-size: 22px;
+      font-weight: 900;
+      color: #0b3f75;
+      word-break: break-word;
+    }
+
+    .metric.good {
+      color: #16a34a;
+    }
+
+    .metric.warn {
+      color: #b45309;
+    }
+
+    .metric.bad {
+      color: #dc2626;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e8f2ff;
+      color: #0b3f75;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-left: 6px;
+    }
+
+    code {
+      background: #eef2f7;
+      padding: 2px 5px;
+      border-radius: 5px;
+    }
+
+    .hint {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #7c2d12;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .notify-card {
+      border-left: 6px solid #6b7280;
+      background: #ffffff;
+    }
+
+    .notify-card.active {
+      border-left-color: #dc2626;
+      background: #fff1f2;
+    }
+
+    .notify-title {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+
+    .notify-text {
+      font-size: 20px;
+      font-weight: 900;
+      color: #6b7280;
+    }
+
+    .notify-text.active {
+      color: #dc2626;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Lab 6 - OpenCV Person Moving Detection</h1>
+    <p>Webcam + FPS + Motion Detection + OpenCV HOG Person. Chi thong bao khi phat hien nguoi dang chuyen dong.</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>1. Camera Source <span class="badge">Webcam</span></h2>
+
+      <p class="small">
+        Mac dinh dung webcam may tinh voi <code>source = 0</code>.
+        Neu khong len hinh, thu doi thanh <code>1</code> roi bam <b>Bat stream</b>.
+      </p>
+
+      <label for="source"><b>Camera source:</b></label>
+      <br />
+      <input id="source" type="text" value="0" />
+
+      <div style="margin-top: 12px;">
+        <button onclick="startStream()">Bat stream</button>
+        <button class="stop" onclick="stopStream()">Dung stream</button>
+        <button onclick="snapshot()">Chup anh</button>
+        <button class="motion" onclick="detectPerson()">Test person</button>
+        <button class="motion" onclick="personMotion()">Ghi nhan person moving</button>
+        <button onclick="toggleMonitor()">Bat/Tat monitor realtime</button>
+        <button class="danger" onclick="recordVideo()">Ghi video 5s</button>
+      </div>
+
+      <p>
+        Trang thai stream:
+        <span id="streamStatus" class="status off">Chua bat stream</span>
+      </p>
+
+      <div class="hint">
+        Quy tac thong bao:
+        <b>motion + PERSON</b> = thong bao.
+        Neu chi co chuyen dong nhung khong phat hien nguoi thi chi hien <b>MOTION_ONLY</b>.
+      </div>
+    </section>
+
+    <section class="card notify-card" id="notifyCard">
+      <h2 class="notify-title">2. Thong bao</h2>
+      <div id="notifyText" class="notify-text">Chua co thong bao person moving</div>
+    </section>
+
+    <section class="grid-main">
+      <div class="card">
+        <h2>3. Live Camera</h2>
+        <img id="stream" alt="Live webcam stream" />
+      </div>
+
+      <div class="card">
+        <h2>4. Ket qua API</h2>
+        <pre id="out">Chua co ket qua...</pre>
+      </div>
+    </section>
+
+    <section class="grid-5">
+      <div class="card">
+        <div class="metric" id="eventType">-</div>
+        <div>Trang thai hien tai</div>
+      </div>
+
+      
+
+
+      <div class="card">
+        <div class="metric" id="motionScore">0</div>
+        <div>Motion score</div>
+      </div>
+
+      <div class="card">
+        <div class="metric" id="personCount">0</div>
+        <div>So person</div>
+      </div>
+
+      <div class="card">
+        <div class="metric" id="personMoving">NO</div>
+        <div>Person moving</div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card">
+        <h2>5. Anh moi nhat</h2>
+        <img id="raw" alt="Raw image" />
+      </div>
+
+      <div class="card">
+        <h2>6. Anh xu ly moi nhat</h2>
+        <img id="processed" alt="Processed image" />
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card">
+        <h2>7. Event log moi nhat</h2>
+        <div id="eventTable"></div>
+      </div>
+
+      <div class="card">
+        <h2>8. Metadata moi nhat</h2>
+        <div id="metadataTable"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let monitorTimer = null;
+    let streamEnabled = false;
+
+    function sourceValue() {
+      const value = document.getElementById("source").value.trim();
+      return value || "0";
+    }
+
+    function encodedSource() {
+      return encodeURIComponent(sourceValue());
+    }
+
+    function setOut(data) {
+      document.getElementById("out").textContent = JSON.stringify(data, null, 2);
+    }
+
+    function setImages(data) {
+      if (data.raw_image_url) {
+        document.getElementById("raw").src = data.raw_image_url + "?t=" + Date.now();
+      }
+
+      if (data.processed_image_url) {
+        document.getElementById("processed").src = data.processed_image_url + "?t=" + Date.now();
+      }
+    }
+
+    function setMetricClass(id, type) {
+      const el = document.getElementById(id);
+      el.className = "metric";
+
+      if (type === "good") {
+        el.classList.add("good");
+      } else if (type === "warn") {
+        el.classList.add("warn");
+      } else if (type === "bad") {
+        el.classList.add("bad");
+      }
+    }
+
+    function updateNotification(state) {
+      const card = document.getElementById("notifyCard");
+      const text = document.getElementById("notifyText");
+
+      const active =
+        state.person_moving_detected === true ||
+        state.notification_active === true;
+
+      if (active) {
+        card.classList.add("active");
+        text.classList.add("active");
+        text.textContent = state.notification_text || "Phat hien nguoi dang chuyen dong";
+        document.title = "PERSON MOVING - Lab 6";
+      } else {
+        card.classList.remove("active");
+        text.classList.remove("active");
+
+        if (state.event_type === "MOTION_ONLY") {
+          text.textContent = "Co chuyen dong nhung chua phat hien person";
+        } else if (state.event_type === "PERSON_DETECTED_NO_MOTION") {
+          text.textContent = "Co person nhung chua co chuyen dong";
+        } else {
+          text.textContent = "Chua co thong bao person moving";
+        }
+
+        document.title = "Lab 6 - OpenCV Person Moving Detection";
+      }
+    }
+
+    function startStream() {
+      const img = document.getElementById("stream");
+      img.src = "/video_feed?source=" + encodedSource() + "&t=" + Date.now();
+
+      streamEnabled = true;
+
+      const status = document.getElementById("streamStatus");
+      status.textContent = "Stream webcam dang bat";
+      status.className = "status";
+
+      refreshStatus();
+
+      if (!monitorTimer) {
+        monitorTimer = setInterval(refreshStatus, 500);
+      }
+    }
+
+    function stopStream() {
+      document.getElementById("stream").src = "";
+      streamEnabled = false;
+
+      const status = document.getElementById("streamStatus");
+      status.textContent = "Stream da dung";
+      status.className = "status off";
+    }
+
+    async function requestJson(url) {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        setOut(data);
+        setImages(data);
+
+        await refreshStatus();
+        await refreshDashboardTables();
+
+        return data;
+      } catch (err) {
+        const errorData = {
+          error: true,
+          message: String(err),
+          hint: "Kiem tra terminal FastAPI, webcam permission, hoac endpoint trong app.py."
+        };
+
+        setOut(errorData);
+        return errorData;
+      }
+    }
+
+    async function snapshot() {
+      await requestJson("/snapshot?source=" + encodedSource());
+    }
+
+    async function detectPerson() {
+      await requestJson(
+        "/detect-person?source=" +
+        encodedSource() +
+        "&person_score=0.2"
+      );
+    }
+
+    async function personMotion() {
+      await requestJson("/motion-capture?source=" + encodedSource());
+    }
+
+    async function recordVideo() {
+      await requestJson(
+        "/record-video?source=" +
+        encodedSource() +
+        "&seconds=5"
+      );
+    }
+
+    async function refreshStatus() {
+      try {
+        const response = await fetch("/camera-status?source=" + encodedSource());
+        const state = await response.json();
+
+        const eventType = state.event_type || "-";
+     
+
+        const motionScore = state.motion_score_smooth ?? 0;
+        const personCount = state.person_count ?? 0;
+        const personMoving = state.person_moving_detected === true;
+
+        document.getElementById("eventType").textContent = eventType;
+       
+        document.getElementById("motionScore").textContent = motionScore;
+        document.getElementById("personCount").textContent = personCount;
+        document.getElementById("personMoving").textContent = personMoving ? "YES" : "NO";
+
+        updateNotification(state);
+
+        if (personMoving) {
+          setMetricClass("eventType", "bad");
+          setMetricClass("personMoving", "bad");
+        } else if (state.motion_detected) {
+          setMetricClass("eventType", "warn");
+          setMetricClass("personMoving", "");
+        } else if (state.person_detected) {
+          setMetricClass("eventType", "good");
+          setMetricClass("personMoving", "");
+        } else {
+          setMetricClass("eventType", "");
+          setMetricClass("personMoving", "");
+        }
+
+        if (state.source_label && state.source_label.includes("SIMULATED")) {
+          const status = document.getElementById("streamStatus");
+          status.textContent = "Chua mo duoc webcam - dang chay mo phong";
+          status.className = "status off";
+        } else if (streamEnabled) {
+          const status = document.getElementById("streamStatus");
+          
+          
+          status.className = "status";
+        }
+
+        return state;
+      } catch (err) {
+        console.log("refreshStatus error:", err);
+        return null;
+      }
+    }
+
+    function toggleMonitor() {
+      const status = document.getElementById("streamStatus");
+
+      if (monitorTimer) {
+        clearInterval(monitorTimer);
+        monitorTimer = null;
+
+        status.textContent = streamEnabled
+          ? "Stream dang bat - monitor da tat"
+          : "Monitor da tat";
+
+        status.className = streamEnabled ? "status" : "status off";
+        return;
+      }
+
+      status.textContent = "Monitor realtime dang bat";
+      status.className = "status";
+
+      monitorTimer = setInterval(refreshStatus, 500);
+    }
+
+    function tableFromRows(rows, cols) {
+      if (!rows || rows.length === 0) {
+        return '<p class="small">Chua co du lieu.</p>';
+      }
+
+      let html = "<table><thead><tr>";
+
+      for (const c of cols) {
+        html += "<th>" + c + "</th>";
+      }
+
+      html += "</tr></thead><tbody>";
+
+      for (const row of rows.slice().reverse()) {
+        html += "<tr>";
+
+        for (const c of cols) {
+          html += "<td>" + (row[c] ?? "") + "</td>";
+        }
+
+        html += "</tr>";
+      }
+
+      html += "</tbody></table>";
+
+      return html;
+    }
+
+    async function refreshDashboardTables() {
+      try {
+        const latest = await (await fetch("/latest")).json();
+
+        if (latest.raw_image_url) {
+          document.getElementById("raw").src = latest.raw_image_url + "?t=" + Date.now();
+        }
+
+        if (latest.processed_image_url) {
+          document.getElementById("processed").src = latest.processed_image_url + "?t=" + Date.now();
+        }
+
+        const events = await (await fetch("/events?limit=8")).json();
+        const metadata = await (await fetch("/metadata?limit=8")).json();
+
+        document.getElementById("eventTable").innerHTML = tableFromRows(
+          events.items,
+          ["event_type", "timestamp", "severity", "score", "explanation"]
+        );
+
+        document.getElementById("metadataTable").innerHTML = tableFromRows(
+          metadata.items,
+          ["image_id", "timestamp", "source_type", "width", "height", "brightness"]
+        );
+      } catch (err) {
+        console.log("refreshDashboardTables error:", err);
+      }
+    }
+
+    window.addEventListener("load", () => {
+      startStream();
+      refreshDashboardTables();
+    });
+
+    setInterval(refreshDashboardTables, 5000);
+  </script>
+</body>
+</html>
